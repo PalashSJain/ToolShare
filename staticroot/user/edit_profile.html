@@ -1,0 +1,110 @@
+{% extends 'navigation/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="well form-group">
+        <div class="row">
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                <div class="col-sm-12">
+                    <div class="form-group">
+                            <h2>Personal Details</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                {% if intialPP %}
+                                    <a href="/uploads/{{ intialPP }}"><img class="list-group-item" src="/uploads/{{ intialPP }}"></a>
+                                    {% if intialPP %}
+                                        <input id="picture_path-clear_id" name="picture_path-clear" type="checkbox"
+                                                {% if form.picture_path.value == False %}
+                                               checked
+                                                {% endif %}>
+                                        <label for="picture_path-clear_id">Remove picture</label>
+                                    {% endif %}
+                                {% else %}
+                                    <img class="list-group-item"src="/static/tool_share/images/user-placeholder.png">
+                                {% endif %}
+                                <input id="id_picture_path" name="picture_path" type="file">
+                                <span class="help-block has-error">{{ form.picture_path.errors }}</span>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="required">First Name</label>
+                                    <input type="text" name="first_name" id="id_first_name" maxlength=30
+                                           placeholder="First Name" class="form-control" required
+                                           value="{{ form.first_name.value }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Last Name</label>
+                                    <input type="text" name="last_name" id="id_last_name" maxlength=30
+                                           placeholder="Last Name"
+                                           class="form-control" required value="{{ form.last_name.value }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Email Address</label>
+                                    <input maxlength="255" type="email" name="username" id="id_username"
+                                           placeholder="Email Address. This would be used for signing in."
+                                           class="form-control"
+                                           required data-toggle="tooltip"
+                                           title="Please enter your valid email address. This will be used for communication."
+                                           value="{{ form.username.value }}">
+                                    <span class="help-block has-error">{{ form.username.errors }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    <div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Address</label>
+                        <textarea id="id_address" name="address" placeholder="Address" rows="3"
+                                  class="form-control" required data-toggle="tooltip"
+                                  title="Please enter your valid home address.">{{ form.address.value }}</textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            <label class="required">Zip Code</label>
+                            <input id="id_zip_code" pattern="[0-9]{5}"
+                                   name="zip_code" placeholder="Zip Code" class="form-control" required
+                                   data-toggle="tooltip"
+                                   title="Please enter the valid 5 digit long zip code."
+                                   value="{{ form.zip_code.value }}">
+                            <span class="help-block has-error">{{ form.zip_code.errors }}</span>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            <label class="required">Phone Number</label>
+                            <input id="id_phone_number" name="phone_number" type="text" pattern="\+?1?\d{9,15}"
+                                   name="phone_number" placeholder="Phone Number" class="form-control" required
+                                   data-toggle="tooltip"
+                                   title="Please enter a valid 10-digit phone number."
+                                   value="{{ form.phone_number.value }}">
+                            <span class="help-block has-error">{{ form.phone_number.errors }}</span>
+                        </div>
+                    </div>
+                    <input class="btn btn-success" type="submit" value="Update" />
+                    <input class="btn btn-danger" type="button" value="Cancel" onclick="location.href='/profile/'"/>
+                    <input class="btn btn-warning" type="reset" value="Reset" name="reset"/>
+                    <input class="btn btn-danger pull-right" type="button" value="Delete Account" onclick="deleteUser()"/>
+                    <input class="btn btn-info pull-right" type="button" value="Change Password" onclick="changePassword()"/>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block side_block %}
+    <a href="/profile/" class="list-group-item active">Profile</a>
+    <a href="/mytools/" class="list-group-item">My tools</a>
+    <a href="/myborrowlist/" class="list-group-item">Borrowing</a>
+    <a href="/mylendlist/" class="list-group-item">Lending</a>
+    {% comment %}<a href="javascript:displayAddTool()" class="list-group-item">Add tool</a>{% endcomment %}
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    function changePassword(){
+        document.location.href = "/profile/edit/password/";
+    }
+    function deleteUser(){
+        document.location.href = "/deleteuser/{{ user.id }}/";
+    }
+</script>
+{% endblock %}

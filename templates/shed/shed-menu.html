@@ -1,0 +1,34 @@
+{% extends "navigation/base.html" %}
+{% load staticfiles %}
+{% block content %}
+    {% if add_shed_btn %}
+            <h2>There's no Community Shed for this Share Zone.<br>Do you want to create one?</h2>
+            <button class="btn btn-primary create-shed-btn btn-lg">Create a shed</button>
+    {% else %}
+        {% block maincontent %}
+        {% endblock %}
+    {% endif %}
+
+
+<script>
+	$(document).ready(function(){
+		$('.create-shed-btn').on('click', createShedClick);
+	});
+
+	function createShedClick(event){
+		$.ajax({
+		 	url: '/shed/createshed/',
+		    dataType: 'html',
+		    success: clickResponse,
+		    error: function(){console.log("error");}
+		});
+	}
+
+	function clickResponse(data){
+		$('.modal').remove();
+		$('body').append(data);
+		$('#myModal').modal();
+	}
+</script>
+
+{% endblock %}

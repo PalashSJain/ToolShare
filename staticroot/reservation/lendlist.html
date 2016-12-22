@@ -1,0 +1,82 @@
+{% extends 'navigation/base.html' %}
+{% load staticfiles %}
+
+{%block content%}
+{% if resvs %}
+    <h2>Borrowing Requests for My Tools</h2>
+    {% for resv in resvs %}
+            <div class="col-sm-12 well">
+                <div class="row">
+                    <div class="col-sm-4">
+                        {% if resv.tool.picture_path %}
+                            <img class="list-group-item" src="/uploads/{{ resv.tool.picture_path }}">
+                        {% else %}
+                            <img class="list-group-item" src="/static/tool_share/images/user-placeholder.png">
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label>Tool Name</label>
+                            {{ resv.tool.title }}
+                        </div>
+                        <div class="form-group">
+                            <label>Request from</label>
+                            {{ resv.borrower}}
+                        </div>
+                        <div class="form-group">
+                            <label>Reservation from</label>
+                            {{ resv.start_date }} to {{ resv.end_date }}
+                        </div>
+                        <div class="form-group">
+                            <label>Tool shared from</label>
+                            {{ resv.tool.SHAREFROM_CHOICES|get_enum:resv.tool.pickupDropLoc }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Message</label><br>
+                    {% if resv.resv_type == resv.REJECTED %}{{ resv.reason_for_rejection }}{% else %}
+                        {{ resv.message_from_borrower }}{% endif %}
+                </div>
+                {% if resv.resv_type == resv.REQUESTED %}
+                    <button class="resv-item btn btn-warning pull-right" data-resvid={{resv.id}}>
+                    Respond to Request
+                    </button>
+                {% elif resv.resv_type == resv.APPROVED and resv.has_started == False%}
+                    <a href='/{{ resv.id }}/updatereservation/{{ resv.CANCELLED_BY_LENDER }}' class='btn btn-danger pull-right'>Cancel</a>
+                {% elif resv.resv_type == resv.APPROVED and resv.has_started == True%}
+                    Reservation has begun, owner can no longer cancel.
+                {% else%}
+                    {{ resv.RESERVATION_TYPES|get_enum:resv.resv_type }}
+                {% endif %}
+            </div>
+            <br>
+        {% endfor %}
+    {% else %}
+        <h1>None of your tools are lent or reserved</h1>
+{% endif %}
+{%endblock%}
+{% block side_block %}
+	<a href="/profile/" class="list-group-item">Profile</a>
+    <a href="/mytools/" class="list-group-item">My tools</a>
+    <a href="/myborrowlist/" class="list-group-item">Borrowing</a>
+    <a href="/mylendlist/" class="list-group-item active">Lending</a>
+    {% comment %}<a href="javascript:displayAddTool()" class="list-group-item">Add tool</a>{% endcomment %}
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.resv-item').on('click', getForm);
+	});
+	function getForm(event){
+		var resvId = $(event.target).data('resvid');
+		$.ajax({
+		 	url: '/approval/' + resvId + '/',
+		    dataType: 'html',
+		    success: displayModal,
+		    error: function(){console.log("error");}
+		});
+	}
+</script>
+{% endblock %}

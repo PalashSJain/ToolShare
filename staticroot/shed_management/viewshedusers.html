@@ -1,0 +1,48 @@
+{% extends "shed/shed-menu.html" %}
+{% load staticfiles %}
+
+{% block side_block %}
+    <a href="/shed/stats/" class="list-group-item" id="link_stat">Zone statistics</a>
+    <a href="/viewshedusers/" class="list-group-item active" id="link_mbr">Zone members</a>
+    <a href="/shed/shed_details" class="list-group-item" id="link_shed">Shed details</a>
+    {% if isCoordinator == True %}
+    <a href="/shed/inventory/" class="list-group-item" id="link_inv" >Shed inventory</a>
+    {% endif %}
+{% endblock %}
+
+
+{% block maincontent %}
+<h2 class="page-title">{{ page_title }}</h2>
+<div id="users" class="tool-items-list">
+
+    {%for user in users%}
+    <div class="tool-item shed-user">
+        <div>
+            {% if user.picture_path%}
+                <img class="tool-image" src="/uploads/{{ user.picture_path }}">
+            {% else %}
+                <img class="tool-image" src="/static/tool_share/images/user-placeholder.png">
+            {% endif %}
+        </div>
+        <form  class="tool-details">
+            <div class="tool-name">{{user.first_name}} {{user.last_name}}</div>
+            <div class="tool-borrower">Email: {{user.username}}</div>
+            <div class="tool-borrower">Address: {{user.address}}</div>
+            <div class="tool-borrower">Coordinator: {% if user.is_coordinator %} YES {% else %} NO{% endif %}</div>
+        </form>
+    </div>
+    {% if req_user.is_coordinator %}
+        <form action="/makeshedcoordinator/{{user.id}}/">
+        {% if user.is_coordinator %}
+            <input type="submit" class="btn btn-danger"formaction="demotetouser/{{ user.id }}/" value="Demote to User"/>
+        {% else %}
+            <button type="submit"class="btn btn-success" >Make Shed Coordinator</button>
+        {% endif %}
+        <input type="submit" class="btn btn-danger btn-delete"formaction="deleteuser/{{ user.id }}/" value="Delete User">
+        </form>
+    {% endif %}
+
+    {%endfor%}
+</div>
+{% endblock %}
+

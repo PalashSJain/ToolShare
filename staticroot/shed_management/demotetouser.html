@@ -1,0 +1,32 @@
+{% extends "shed/shed-menu.html" %}
+{% load staticfiles %}
+{% block maincontent %}
+    <div class="list-group side-nav-links">
+            <a href="/shed/inventory/" class="list-group-item" id="link_inv" >Shed inventory</a>
+            <a href="/viewshedusers/" class="list-group-item" id="link_mbr">Shed members</a>
+            <a href="#" class="list-group-item" id="link_stat">Statistics</a>
+        </div>
+<h2 class="page-title">{{ page_title }}</h2>
+{%block itemslist%}
+			<div id="users" class="tool-items-list">
+
+				<div >
+					<div>
+                        <p>Shed Coordinator is successfully demoted to User. Here are the details.</p>
+                        <p> User Name: {{users.first_name}} {{users.last_name}}<br>
+							User ID: {{users.username}}<br>
+                            Is shed cordinator :  {% if users.is_coordinator %} YES {% else %} NO{% endif %}
+
+                    </div>
+
+					</div>
+			</div>
+{%endblock%}
+{% endblock %}
+{% block side_block %}{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" id="tool-script">
+
+</script>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "shed/shed-menu.html" %}
+{% load staticfiles %}
+
+{% block side_block %}
+    <a href="/shed/stats/" class="list-group-item" id="link_stat">Zone statistics</a>
+    <a href="/viewshedusers/" class="list-group-item" id="link_mbr">Zone members</a>
+    <a href="/shed/shed_details/" class="list-group-item" id="link_shed">Shed details</a>
+    {% if isCoordinator == True %}
+    <a href="/shed/inventory/" class="list-group-item active" id="link_inv" >Shed inventory</a>
+    {% endif %}
+{% endblock %}
+
+{%block maincontent%}
+    {%if tools%}
+<h2 class="page-title">{{ page_title }}</h2>
+    <div class="tool-items-list">
+        {%for item in tools%}
+        <div class="tool-item" data-toolid={{item.id}} data-mine={% ifequal req_user item.ownedBy %} }}True{% endifequal %}>
+            <div>
+                {% if item.picture_path %}
+                    <img class="tool-image" src="/uploads/{{ item.picture_path }}">
+                {% else %}
+                    <img class="tool-image" src="{% static 'tool_share/images/dummy_tool.png' %}">
+                {% endif %}
+            </div>
+
+            <div class="tool-details">
+                <div class="tool-name">{{item.title}}</div>
+                <div class="tool-borrower">Possession:
+                {% if item.get_borrower%}
+                    {{item.get_borrower.first_name }},
+                {% endif %}
+                {{ item.POSSESSION_CHOICES|get_enum:item.possession }}
+                </div>
+            {% if item.possession == item.RETURNED %}
+            </div>
+        </div>
+                {% for form in forms %}
+                    {% if forloop.parentloop.counter0 == forloop.counter0 %}
+                        <form method="POST" action="/verifycondition/{{ item.id }}/">
+                            {% csrf_token %}
+                            <label for="{{ form.condition.id_for_label }}">Condition: </label>
+                            {{ form.condition }}
+                            <button type=submit class='btn btn-warning'>Verify</button>
+                        </form>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="tool-condition">Condition: {{   item.CONDITION_CHOICES|get_enum:item.condition }}</div>
+            </div>
+        </div>
+            {% endif %}
+        {%endfor%}
+    </div>
+    {%else%}
+    <h1>There are no active tools available in<br>your community shed's inventory.<br>Start with adding a tool in shed?</h1>
+    <a class="btn btn-primary add-tool-btn btn-lg" href="javascript:displayAddTool()">Add a tool</a>
+    {%endif%}
+{%endblock%}
+
+{%block javascript%}
+<script type="text/javascript" >
+
+	$(document).ready(function(){
+		$('.tool-item').on('click', itemClick);
+        $('#link_inv').addClass('active');
+		$('.verify-btn').on('click', verify);
+	});
+    function verify(event){
+        if($(event.target).hasClass('verify-btn')) {
+            var toolId = $(event.target).data('toolid');
+            var verified_ret = $(event.target).data('pos');
+            $.ajax({
+                url: '/'+toolId+'/updatepossession/'+verified_ret+'/',
+                dataType: 'html',
+                success:function(){
+                    document.location.reload()
+                },
+                error: function () {
+                    console.log("ajax error");
+                }
+            });
+        }
+	}
+	function itemClick(event){
+        if($(event.target).hasClass('tool-item')) {
+            var toolId = $(event.target).data('toolid');
+            console.log(toolId)
+            var isMine = $(event.target).data('mine');
+            $.ajax({
+                url: (isMine ? '/mytools/' : '/tools/') + toolId + '/',
+                dataType: 'html',
+                success: displayModal,
+                error: function () {
+                    console.log("error");
+                }
+            });
+        }
+	}
+</script>
+{%endblock%}

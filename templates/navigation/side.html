@@ -1,0 +1,11 @@
+<!-- <div class="container-fluid"> -->
+    <!-- <div class="row"> -->
+	    <div class="col-sm-3 col-md-2 sidebar" style="float:right;position:static;">
+	    {% block side_block %}
+	    {% for item in side_links %}
+	    	<a href="/{{ item.link }}">{{ item.title }}</a><br>
+	    {% endfor %}
+		{% endblock %}
+	    </div>
+    <!-- </div> -->
+<!-- </div> -->

@@ -1,0 +1,64 @@
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-label="Close" type="button" data-dismiss="modal"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{ tool.title }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4 form-group">
+                        {% if tool.picture_path %}
+                            <img class="tool-image" src="/uploads/{{ tool.picture_path }}">
+                        {% else %}
+                            <img class="tool-image" src="/static/tool_share/images/dummy_tool.png">
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-8 form-group tool-details-info">
+                        <strong>Description</strong><br>
+                        {{ tool.description }}<br>
+                        <br>
+                    </div>
+                </div>
+                <div class="form-group tool-details-info">
+                    <strong>Special Instructions</strong><br>
+                    {{ tool.special_instructions }}<br>
+                    <br>
+                    <strong>Tool's Condition</strong>: {{ CONDITION_CHOICES|get_enum:tool.condition }}<br>
+                    <br>
+                    <strong>Owned by</strong>: {{ tool.ownedBy__first_name }} {{ tool.ownedBy__last_name }}<br>
+                    <br>
+                    <strong>Pickup location</strong>:
+                    {{ tool.ownedBy__address }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                {% if ACTIVATED == tool.activation %}
+                        <button class="btn btn-primary borrow-tool-btn">Borrow</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.borrow-tool-btn').on('click', itemClick);
+        });
+
+        function itemClick(event) {
+            $.ajax({
+                url: '/borrowtoolrequest/{{ tool.id }}/',
+                dataType: 'html',
+                success: displayModal,
+                error: function () {
+                    console.log("error");
+                }
+            });
+        }
+    </script>
+{% endblock %}

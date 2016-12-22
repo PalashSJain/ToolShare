@@ -1,0 +1,85 @@
+<div class="modal fade approval-modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Respond</h4>
+      </div>
+      <div class="modal-body">
+             <form action="/approval/{{ form.instance.pk }}/" method="POST" class="tool-approve-form">{% csrf_token %}
+                    {{ form.non_field_errors }}
+                 <div class="form-group">
+                     <label class="required">Do you want to lend the tool?</label>
+                     <label for="id_approval_0"><input id="id_approval_0" name="approval" type="radio" value="2"> Yes</label>
+                     <label for="id_approval_1"><input id="id_approval_1" name="approval" type="radio" value="3"> No</label>
+                 </div>
+                 <div class="form-group">
+                     <div class="reason">
+                         <label class="required" for="id_reason_for_rejection">Reason for rejection</label>
+                         <textarea id="id_reason_for_rejection" name="reason_for_rejection"
+                                   placeholder="Reason has to be mentioned" rows="10"
+                                   class="form-control"></textarea>
+                     </div>
+                 </div>
+                <button type="submit" class="btn btn-warning form-submit-btn">Send</button>
+            </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        $('.form-submit-btn').on('click',formSubmit);
+        $("input[name=approval]:radio").change(handleRadioChange);
+        $('#id_approval_0').get(0).checked = true;
+        handleRadioChange();
+    });
+
+    function formSubmit(event){
+        event.preventDefault();
+
+        if($('#id_approval_1').get(0).checked){
+            if($('#id_reason_for_rejection').val() == ""){
+                $('.rejection-msg').html('Reason needs to be mentioned');
+                return;
+            }
+        }
+
+        var data = new FormData($('.tool-approve-form').get(0));
+        $.ajax({
+            type: 'POST',
+            data: data,
+            cache: false,
+            processData: false,
+            contentType: false,
+            url: '/approval/{{ form.instance.pk }}/',
+            dataType: 'html',
+            success: function(data){
+                var htmlData = $(data);
+                if(data.indexOf('approval-modal') > 0){
+                    $('.approval-modal').html($(htmlData).html());
+                    $("#myModal").modal('handleUpdate');
+                } else {
+                    $('#myModal').modal('hide');
+                    window.location.reload(true);
+                }
+            },
+            error: function (data) {
+                console.log("resv error");
+                console.log(data);
+            }
+        });
+    }
+
+    function handleRadioChange(event){
+        if($('#id_approval_1').get(0).checked){
+            $('.reason').show();
+            $('.rejection-msg').html('Reason needs to be mentioned');
+        } else{
+            $('.reason').hide();
+        }
+    }
+
+</script>

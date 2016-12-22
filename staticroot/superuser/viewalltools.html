@@ -1,0 +1,30 @@
+{% extends "superuser/superuser_base.html" %}
+{% load staticfiles %}
+{% block side_block %}
+     <style>
+    .list-group{
+        padding-top: 40px;
+    }
+
+    </style>
+<div class="list-group side-nav-links">
+    <a href="/superuser/view_allusers/" class="list-group-item" id="link_stat">All Users</a>
+    <a href="/superuser/viewallsheds/" class="list-group-item" id="link_mbr">All Sheds</a>
+    <a href="/superuser/viewalltools/" class="list-group-item active" id="link_shed">All Tools details</a>
+</div>
+{% endblock %}
+{% block content %}
+
+
+<div id="users" class="tool-items-list">
+    {%for tool in alltools%}
+        <div class="tool-item_superuser shed-user">
+            <form  class="tool-details_superuser">
+                <div class="tool-name">Tool name : {{ tool.title }}</div>
+                <div class="tool-borrower">Tool's Condition : {{ tool.CONDITION_CHOICES|get_enum:tool.condition }}</div>
+            <button type="button" class="btn btn-danger btn-delete"onclick="window.location.href='/superuser/delete_tool_superuser/{{ tool.id }}/'">Delete Tool</button>
+         </form>
+        </div>
+    {%endfor%}
+</div>
+{%endblock%}

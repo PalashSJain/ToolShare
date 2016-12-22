@@ -1,0 +1,33 @@
+{% extends 'navigation/base.html' %}
+
+{%block content%}
+    <div class="tool-items-list">
+        <div id="items">
+            {% if resv.resv_type == resv.REQUESTED %}
+                <h4> Your request to borrow the following tool has been sent to the owner for Approval. We will notify
+                    you when the owner makes a decision.</h4>
+
+                <p>Awaiting Owner's Approval</p>
+            {% else %}
+
+                <h4> Congrats!! You have successfully reserved the following tool.</h4>
+            {% endif %}
+            <br>
+            <p>Tool id: {{ tool.id }}</p>
+            <p>Tool name: {{ tool.title }}</p>
+            <p>Tool Pick Location: {{ tool.SHAREFROM_CHOICES|get_enum:tool.pickupDropLoc }}</p>
+            <br>
+            <p>View BORROWED TOOLS to view this reservation.</p>
+
+
+        </div>
+    </div>
+{%endblock%}
+
+{% block side_block %}
+    <a href="/profile/" class="list-group-item">Profile</a>
+    <a href="/mytools/" class="list-group-item">My tools</a>
+    <a href="/myborrowlist/" class="list-group-item active">Borrowing</a>
+    <a href="/mylendlist/" class="list-group-item">Lending</a>
+    {% comment %}<a href="javascript:displayAddTool()" class="list-group-item">Add tool</a>{% endcomment %}
+{% endblock %}

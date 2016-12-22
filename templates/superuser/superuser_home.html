@@ -1,0 +1,41 @@
+{% extends "superuser/superuser_base.html" %}
+{% load staticfiles %}
+{% block side_block %}
+<div class="list-group side-nav-links">
+    <a href="/superuser/view_allusers/" class="list-group-item" id="link_stat">All Users</a>
+    <a href="/superuser/viewallsheds/" class="list-group-item" id="link_mbr">All Sheds</a>
+    <a href="/superuser/viewalltools/" class="list-group-item" id="link_shed">All Tools details</a>
+</div>
+{% endblock %}
+{% block content %}
+{%block itemslist%}
+			<div id="items">
+
+				<div class="tool-items-list">
+                <h1>Super User Dashboard</h1>
+
+                   <a href="/superuser/view_allusers/"> <img src="{% static 'tool_share/images/users.jpg' %}"/></a>
+
+                   <a href="/superuser/viewallsheds/"> <img src="{% static 'tool_share/images/sheds.jpg' %}"/></a>
+
+                   <a href="/superuser/viewalltools/"> <img src="{% static 'tool_share/images/tools.png' %}"/> </a>
+
+                </div>
+			</div>
+{%endblock%}
+
+<style>
+.tool-items-list{
+    width:800px;
+    padding-top: 50px;
+}
+.tool-items-list img{
+    padding: 20px;
+}
+</style>
+
+
+<script type="text/javascript" >
+
+</script>
+{% endblock %}

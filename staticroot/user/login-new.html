@@ -1,0 +1,201 @@
+{% extends "navigation/base.html" %}
+{% load staticfiles %}
+
+{% block errorlogger %}
+		{% if form.errors %}
+
+	<p>Your username and password didn't match. Please try again.</p>
+	{% endif %}
+
+	{% if next %}
+		{% if user.is_authenticated %}
+			<p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+		{% comment "Removed from R1" %}
+		{% else %}
+			<p>Please login to see this page.</p>
+		{% endcomment %}
+		{% endif %}
+	{% endif %}
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="{% url 'home' %}">ToolShare</a>
+    </div>
+    <div class="navbar-collapse">
+        <form name="login" action="/login/" class="navbar-form form-inline pull-right" method="post" onsubmit="return checkLogin(this)">
+            {% csrf_token %}
+            <input maxlength="255" type="email" name="username" id="id_username" placeholder="Email Address" class="form-control" required>
+            <input maxlength="30" type="password" id="id_password" name="password" placeholder="Password" class="form-control" required>
+            <input class="btn btn-register btn-success" name="login" type="submit" value="Login"/>
+        </form>
+    </div>
+</div>
+{% endblock navbar %}
+
+
+{% block nonlogin %}
+    <div class="container">
+        <h1 class="well">Welcome to ToolShare, a community that believes in sharing</h1>
+        <div class="col-sm-4 form-group">
+            <div class="well">
+                <strong>Explore what your neighbours have shared!</strong>
+            </div>
+            <div class="well">
+                <strong>Need a tool? Just request your neighbours.</strong>
+            </div>
+            <div class="well">
+                <strong>Help someone in need, share your tools!</strong>
+            </div>
+            <img src="/static/tool_share/images/tool_share_logo.png" class="landing-photo">
+            <br>
+        </div>
+        <div class="col-sm-8 well form-group">
+            <div class="row">
+                <form name="register" id="registrationForm" action="/register/" method="post" onsubmit="return checkForm(this)">{% csrf_token %}
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label class="required">First Name</label>
+                                <input type="text" name="first_name" id="id_first_name" maxlength=30 placeholder="First Name" class="form-control" required value="{{ form.first_name.value }}">
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="required">Last Name</label>
+                                <input type="text" name="last_name" id="id_last_name" maxlength=30 placeholder="Last Name" class="form-control" required value="{{ form.last_name.value }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Email</label>
+                            <input maxlength="255" type="email" name="username" id="id_username"
+                                   placeholder="Email Address. This would be used for signing in." class="form-control"
+                                   required data-toggle="tooltip"
+                                       title="Please enter your valid email address. This will be used for communication."
+                             value="{{ form.username.value }}">
+                            <span class="help-block has-error">{{ form.username.errors }}</span>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label class="required">Password</label>
+                                <input maxlength=30 minlength=8 type="password" id="id_password1" name="password1"
+                                       placeholder="Password" class="form-control" required data-toggle="tooltip"
+                                       title="Password must be more than eight and less than 30 characters long, have at least one digit, one lowercase character and one uppercase character.">
+                                <span class="help-block has-error">{{ form.password1.errors }}</span>
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="required">Confirm Password</label>
+                                <input maxlength=30 minlength=8 type="password" id="id_password2" name="password2"
+                                       placeholder="Confirm Password" class="form-control" required data-toggle="tooltip"
+                                       title="Password must be more than eight and less than 30 characters long, have at least one digit, one lowercase character and one uppercase character.">
+                                <span class="help-block has-error">{{ form.password2.errors }}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="required">Address</label>
+                            <textarea id="id_address" name="address" placeholder="Address" rows="3"
+                                      class="form-control" required data-toggle="tooltip"
+                                       title="Please enter your valid home address.">{% if form.address.value != "" %}{{ form.address.value }}{% endif %}</textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 form-group">
+                                <label class="required">Zip Code</label>
+                                <input id="id_zip_code" pattern="[0-9]{5}"
+                                       name="zip_code" placeholder="Zip Code" class="form-control" required data-toggle="tooltip"
+                                       title="Please enter the valid 5 digit long zip code." value="{{ form.zip_code.value }}">
+                                <span class="help-block has-error">{{ form.zip_code.errors }}</span>
+                            </div>
+                            <div class="col-sm-6 form-group">
+                                <label class="required">Phone Number</label>
+                                <input id="id_phone_number" name="phone_number" type="text" maxlength="10" pattern="\+?1?\d{9,15}"
+                                       name="phone_number" placeholder="Phone Number" class="form-control" required data-toggle="tooltip"
+                                       title="Please enter a valid 10-digit phone number.">
+                                <span class="help-block has-error">{{ form.phone_number.errors }}</span>
+                            </div>
+                        </div>
+                        <input class="btn btn-register btn-success pull-right" name="register" type="submit" value="Register" />
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    </script>
+    <script>
+    function alertAndStopRegistration(form, message){
+		alert(message);
+		form.password1.value = "";
+		form.password2.value = "";
+		return false;
+	}
+    function checkForm(form) {
+		re = /^\w+$/;
+		if (form.password1.value != "" && form.password1.value == form.password2.value) {
+			if (form.password1.value.length < 8 && form.password1.value.length > 30) {
+				return alertAndStopRegistration(form, "Error: Password must be longer than 8 characters and smaller than 30 characters!");
+			}
+			if (form.password1.value == form.username.value) {
+				return alertAndStopRegistration(form, "Error: Password must be different from Username!");
+			}
+			re = /[0-9]/;
+			if (!re.test(form.password1.value)) {
+				return alertAndStopRegistration(form, "Error: password must contain at least one number (0-9)!");
+			}
+			re = /[a-z]/;
+			if (!re.test(form.password1.value)) {
+				return alertAndStopRegistration(form, "Error: password must contain at least one lowercase letter (a-z)!");
+			}
+			re = /[A-Z]/;
+			if (!re.test(form.password1.value)) {
+				return alertAndStopRegistration(form, "Error: password must contain at least one uppercase letter (A-Z)!");
+			}
+		} else {
+			return alertAndStopRegistration(form, "Error: Please check that you've entered and confirmed your password!");
+		}
+
+		return true;
+	}
+	function alertAndStopSignin(form, message){
+		alert("Invalid Username or Password");
+        form.username.value = "";
+		form.password.value = "";
+		return false;
+	}
+	function checkLogin(form){
+        re = /^\w+$/;
+		if (form.password.value != "" && form.username.value != "") {
+			if (form.password.value.length < 8 && form.password.value.length > 30) {
+				return alertAndStopSignin(form);
+			}
+			if (form.password.value == form.username.value) {
+				return alertAndStopSignin(form);
+			}
+			re = /[0-9]/;
+			if (!re.test(form.password.value)) {
+				return alertAndStopSignin(form);
+			}
+			re = /[a-z]/;
+			if (!re.test(form.password.value)) {
+				return alertAndStopSignin(form);
+			}
+			re = /[A-Z]/;
+			if (!re.test(form.password.value)) {
+				return alertAndStopSignin(form);
+			}
+		} else {
+			return alertAndStopSignin(form);
+		}
+
+		return true;
+    }
+    </script>
+{% endblock %}
+
+{% block side_block %}
+{% endblock %}

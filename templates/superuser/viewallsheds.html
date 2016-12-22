@@ -1,0 +1,44 @@
+{% extends "superuser/superuser_base.html" %}
+{% load staticfiles %}
+{% block side_block %}
+     <style>
+    .list-group{
+        padding-top: 40px;
+    }
+
+    </style>
+<div class="list-group side-nav-links">
+    <a href="/superuser/view_allusers/" class="list-group-item" id="link_stat">All Users</a>
+    <a href="/superuser/viewallsheds/" class="list-group-item active" id="link_mbr">All Sheds</a>
+    <a href="/superuser/viewalltools/" class="list-group-item" id="link_shed">All Tools details</a>
+</div>
+{% endblock %}
+{% block content %}
+{% block maincontent %}
+<div id="users" class="tool-items-list">
+
+    {%for shed in allsheds%}
+    <div class="tool-item_superuser shed-user">
+        <form  class="tool-details_superuser">
+            <div class="tool-name">Shed Zipcode : {{ shed.zip_code }}</div>
+            <div class="tool-borrower">Shed Address : {{ shed.street_address }}</div>
+            <div class="tool-borrower">Shed City : {{ shed.city }}</div>
+
+        <button type="button" class="btn btn-primary" onclick="window.location.href='/superuser/edit_shed_details_superuser/{{ shed.id }}/'">Edit Shed Address</button>
+{#        <button type="button" class="btn btn-danger btn-delete"onclick="window.location.href='/superuser/delete_shed_superuser/{{ shed.id }}/'">Delete Zone</button>#}
+             </form>
+    </div>
+
+
+
+    {%endfor%}
+</div>
+{%endblock%}
+{% block javascript %}
+<script type="text/javascript" id="tool-script">
+	$(document).ready(function(){
+
+	});
+</script>
+{% endblock %}
+{%endblock%}

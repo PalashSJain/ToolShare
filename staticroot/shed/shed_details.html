@@ -1,0 +1,44 @@
+{% extends "shed/shed-menu.html" %}
+{% load staticfiles %}
+
+{% block side_block %}
+    <a href="/shed/stats/" class="list-group-item" id="link_stat">Zone statistics</a>
+    <a href="/viewshedusers/" class="list-group-item" id="link_mbr">Zone members</a>
+    <a href="/shed/shed_details/" class="list-group-item active" id="link_shed">Shed details</a>
+    {% if isCoordinator %}
+        <a href="/shed/inventory/" class="list-group-item" id="link_inv" >Shed inventory</a>
+    {% endif %}
+{% endblock %}
+
+{% block maincontent %}
+    <h2 class="page-title">{{ page_title }}</h2>
+    <div id="users">
+        <div class="form-group">
+            <label class="required">Address</label>
+            <textarea id="id_address" name="address" placeholder="Address" rows="3"
+                      class="form-control" readonly>{{ shed_detail.street_address}}</textarea>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label class="required">Shed City</label>
+                <input class="form-control" value="{{ shed_detail.city }}" readonly>
+            </div>
+            <div class="col-sm-6 form-group">
+                <label class="required">Shed Zipcode</label>
+                <input class="form-control" value="{{ shed_detail.zip_code }}" readonly>
+            </div>
+        </div>
+        {% if isCoordinator %}
+            <button type="button" class="btn btn-primary pull-right" onclick="editShed()"><span
+                    class="glyphicon glyphicon-edit"></span>&nbsp;&nbsp;Edit Shed Address
+            </button>
+        {% endif %}
+    </div>
+    <script>
+	function editShed(){
+		document.location.href = "/shed/edit_shed_details/";
+	}
+
+	</script>
+{% endblock %}
+

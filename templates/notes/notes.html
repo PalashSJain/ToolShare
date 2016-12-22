@@ -1,0 +1,36 @@
+{% block notifications %}
+{% if notes %}
+	{% for note in notes %}
+        <div class="notification-item" data-link="{{ note.get_relative_URL }}">
+
+            {% if note.display_to != note.lender %}
+                {% if note.lender.picture_path %}
+                    <img class="note-user-image" src="/uploads/{{ note.lender.picture_path }}">
+                {% else %}
+                    <img class="note-user-image" src="/static/tool_share/images/user-placeholder.png">
+                {% endif %}
+            {% else %}
+                {% if note.borrower.picture_path %}
+                    <img class="note-user-image" src="/uploads/{{ note.borrower.picture_path }}">
+                {% else %}
+                    <img class="note-user-image" src="/static/tool_share/images/user-placeholder.png">
+                {% endif %}
+            {% endif %}
+
+            {% if note.tool.picture_path %}
+                <img class="note-tool-image" src="/uploads/{{ note.tool.picture_path }}">
+            {% else %}
+                <img class="note-tool-image" src="/static/tool_share/images/dummy_tool.png">
+            {% endif %}
+            <div class="notification-msg">
+                {{ note.get_message }}
+            </div>
+            <!-- <a class="notification-item-link" href="{{ note.get_relative_URL }}"></a> -->
+        </div>
+    {% endfor %}
+        <div class="noti-count">{{noti_count}}</div>
+{% else %}
+<div class="zero-notifications"><h5>No notifications</h5></div>
+{% endif %}
+{% endblock notifications %}
+

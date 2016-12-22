@@ -1,0 +1,91 @@
+{% block content %}
+<div class="box">
+<form action="/accounts/register/" method="post" onsubmit="return checkForm(this)">{% csrf_token %}
+    <div class="header1">Registration</div>
+	<p>
+        {{ form.non_field_errors }}
+        <table>
+        	<tr>
+                <td>First Name:</td>
+                <td><input type="text" name="first_name" id="id_first_name" placeholder="First Name" required></td>
+            </tr>
+            <tr>
+                <td>Last Name:</td>
+                <td><input type="text" name="last_name" id="id_last_name" placeholder="Last Name" required></td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="email" name="username" placeholder="Enter your email" id="id_username" required></td>
+                <td>{{form.username.errors}}</td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="password" id="id_password1" maxlength=30 minlength=8 name="password1" required></td>
+                <td>{{form.password1.errors}}</td>
+            </tr>
+            <tr>
+                <td>Confirm Password:</td>
+                <td><input type="password" id="id_password2" maxlength=30 minlength=8 name="password2" required></td>
+                <td>{{form.password2.errors}}</td>
+            </tr>
+            <tr>
+                <td>Address:</td>
+                <td><textarea id="id_address" name="address" rows="4" cols="50" required></textarea></td>
+            </tr>
+            <tr>
+                <td>Zip Code:</td>
+                <td><input id="id_zip_code" name="zip_code" type="number" pattern="[0-9]{5}" name="zip_code" required></td>
+                <td>{{form.zip_code.errors}}</td>
+            </tr>
+            <tr>
+                <td>Phone Number:</td>
+                <td><input id="id_phone_number" name="phone_number" type="tel" pattern="\+?1?\d{9,15}" name="phone_number" required></td>
+                <td>{{form.phone_number.errors}}</td>
+            </tr>
+        </table>
+    </p>
+    <p>
+        <input class="myButton" type="submit" value="Register" />
+    </p>
+    <input type="hidden" name="next" value="{{ next }}" />
+</form>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+	function alertAndStopPOST(form, message){
+		alert(message);
+		form.password1.value = "";
+		form.password2.value = "";
+		return false;
+	}
+	function checkForm(form) {
+		re = /^\w+$/;
+		if (form.password1.value != "" && form.password1.value == form.password2.value) {
+			if (form.password1.value.length < 8 && form.password1.value.length > 30) {
+				return alertAndStopPOST(form, "Error: Password must be longer than 8 characters and smaller than 30 characters!");
+			}
+			if (form.password1.value == form.username.value) {
+				return alertAndStopPOST(form, "Error: Password must be different from Username!");
+			}
+			re = /[0-9]/;
+			if (!re.test(form.password1.value)) {
+				return alertAndStopPOST(form, "Error: password must contain at least one number (0-9)!");
+			}
+			re = /[a-z]/;
+			if (!re.test(form.password1.value)) {
+				return alertAndStopPOST(form, "Error: password must contain at least one lowercase letter (a-z)!");
+			}
+			re = /[A-Z]/;
+			if (!re.test(form.password1.value)) {
+				return alertAndStopPOST(form, "Error: password must contain at least one uppercase letter (A-Z)!");
+			}
+		} else {
+			return alertAndStopPOST(form, "Error: Please check that you've entered and confirmed your password!");
+		}
+
+		return true;
+	}
+</script>
+{% endblock %}

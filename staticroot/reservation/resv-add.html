@@ -1,0 +1,101 @@
+<div class="modal fade resv-modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">{{ page_title }}</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{ form_action }}" method="POST" class="tool-resv-form">{% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            {% if tool.picture_path %}
+                                <img class="tool-image" src="/uploads/{{ tool.picture_path }}">
+                            {% else %}
+                                <img class="tool-image" src="/static/tool_share/images/dummy_tool.png">
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-8 form-group">
+                            <strong>Name</strong><br>
+                            {{ tool.title }}<br>
+                            <br>
+                            <strong>Owner</strong><br>
+                            {{ tool.ownedBy }}<br>
+                            <br>
+                            <strong>Pickup Location</strong><br>
+                            {{ pickupLocation }}<br>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 form-group">
+                            {{ form.start_date.label_tag }}<br>
+                            {{ form.start_date }}<br>
+                            <span class="help-block has-error">{{ form.start_date.errors }}</span>
+                        </div>
+                        <div class="col-sm-6 form-group">
+                            {{ form.end_date.label_tag }}<br>
+                            {{ form.end_date }}<br>
+                            <span class="help-block has-error">{{ form.end_date.errors }}</span>
+                        </div>
+                    </div>
+                    <table class="table"><strong>Unavailable during:</strong>:
+                    {% for resv in unavailabilities %}
+                        <tr><td>{{ resv.start_date }}-{{ resv.end_date }}</td><td>{{ resv.RESERVATION_TYPES|get_enum:resv.resv_type }}</td></tr>
+                    {% endfor %}
+                    </table>
+                    <br>
+                    <div class="form-group">
+                        <label>Message from borrower</label>
+                        <textarea name="message_from_borrower" id="id_message_from_borrower" rows="5"
+                                  class="form-control"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success submit-btn">{{ btn_text }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script> type = "text/javascript" >
+
+        $('.submit-btn').on('click', submitClicked);
+
+        function submitClicked(event) {
+            event.preventDefault();
+            var data = new FormData($('.tool-resv-form').get(0));
+            $.ajax({
+                type: 'POST',
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false,
+                url: '{{form_action}}',
+                dataType: 'html',
+                success: function (data) {
+                    var htmlData = $(data);
+                    if (data.indexOf('resv-modal') > 0) {
+                        $('.resv-modal').html($(htmlData).html());
+                        $("#myModal").modal('handleUpdate');
+                    } else {
+                        $('#myModal').modal('hide');
+                        window.location.href = "/myborrowlist/";
+                    }
+                    // if(htmlData['success'] == 1){
+                    //     $('#myModal').modal('hide');
+                    //     window.location.reload(true);
+                    //     // $('.modal,.modal-backdrop').remove();
+                    // } else if(htmlData['success'] == 0){
+                    //     $('.title-error').html(htmlData['title_error']);
+                    //     $("myModal").modal('handleUpdate');
+                    // }
+                },
+                error: function (data) {
+                    console.log("resv error");
+                    console.log(data);
+                }
+            });
+        }
+    </script>
+</div>
+

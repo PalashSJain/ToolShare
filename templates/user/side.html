@@ -1,0 +1,16 @@
+<div id="side_nav">
+<nav id="conta">
+    <div class="row">
+	
+	    {% block side_block %}
+		<ul>
+	    {% for item in side_links %}
+	    	<li><a href="http://localhost:8000/{{ item.link }}">{{ item.title }}</a></li>
+	    {% endfor %}
+		</ul>
+		{% endblock %}
+		
+	  
+    </div>
+</nav>
+</div>

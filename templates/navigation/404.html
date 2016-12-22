@@ -1,0 +1,11 @@
+
+{% extends 'navigation/base.html' %}
+
+	{% block content %}
+	<div class="container">
+	<h2>Page not found.</h2>
+	<h3>
+		Please check the entered URL.<br> The URL '{{ path_info }}' is not present on the domain.
+	</h3>
+	</div>
+	{% endblock %}

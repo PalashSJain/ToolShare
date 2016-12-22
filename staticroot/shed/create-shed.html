@@ -1,0 +1,24 @@
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Your Share Zone's Shed</h4>
+            </div>
+            <div class="modal-body">
+               <form method="POST" class="post-form shed-form" enctype="multipart/form-data" action="/shed/createshed/" >
+			{% csrf_token %}
+					<label for="id_street_address">Street address:
+					<input id="id_street_address" maxlength="55" class="shed-input form-control input-sm" name="street_address" type="text" required></label>
+					<label for="id_city">City:
+					<input id="id_city" maxlength="25" name="city" class="shed-input form-control input-sm" type="text" required></label>
+					<button type="submit" class="save btn btn-success">Create</button>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>

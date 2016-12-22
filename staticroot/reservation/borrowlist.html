@@ -1,0 +1,78 @@
+{% extends 'navigation/base.html' %}
+
+{% block content %}
+    {% if resvs %}
+        <h2 class="page-title">Tools I have borrowed</h2>
+        {% for resv in resvs %}
+            <div class="col-sm-12 well">
+                <div class="row">
+                    <div class="col-sm-4">
+                        {% if resv.tool.picture_path %}
+                            <img class="list-group-item" src="/uploads/{{ resv.tool.picture_path }}">
+                        {% else %}
+                            <img class="list-group-item" src="/static/tool_share/images/user-placeholder.png">
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label>Tool name</label>
+                            {{ resv.tool.title }}
+                        </div>
+                        <div class="form-group">
+                            <label>Tool owner</label>
+                            {{ resv.tool.ownedBy }}
+                        </div>
+                        <div class="form-group">
+                            <label>Pickup location</label>
+                            {{ resv.tool.get_tool_pickup_address }}
+                        </div>
+                        <div class="form-group">
+                            <label>Reservation from</label>
+                            {{ resv.start_date }} to {{ resv.end_date }}
+                        </div>
+                        <div class="form-group">
+                            <label>Reservation status</label>
+                            {{ resv.RESERVATION_TYPES|get_enum:resv.resv_type }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Message</label><br>
+                    {% if resv.resv_type == resv.REJECTED %}{{ resv.reason_for_rejection }}{% else %}
+                        {{ resv.message_from_borrower }}{% endif %}
+                </div>
+                {% if resv.resv_type == resv.BLOCKOUT %}
+                    <a href='/{{ resv.id }}/updatereservation/{{ resv.UNBLOCKED }}/' class='btn btn-danger pull-right'>Unblock</a>
+                {% elif resv.resv_type == resv.APPROVED %}
+                    {% if resv.tool.possession == resv.tool.VERIFIED_RETURNED %}
+                        {% if resv.has_started and not resv.has_ended %}
+                            <a href='/{{ resv.tool.id }}/updatepossession/{{ resv.tool.PICKED_UP }}/'
+                               class='btn btn-warning pull-right'>Pickup</a>
+                        {% elif not resv.has_ended %}
+                            <a href='/{{ resv.id }}/updatereservation/{{ resv.CANCELLED_BY_BORROWER }}/'
+                               class='btn btn-default pull-right'>Cancel</a>
+                        {% endif %}
+                    {% elif resv.has_started and resv.tool.possession == resv.tool.PICKED_UP %}
+                        <a href='/{{ resv.tool.id }}/updatepossession/{{ resv.tool.RETURNED }}/'
+                           class='btn btn-warning pull-right'>Return</a>
+                    {% elif resv.has_started and not resv.has_ended and resv.tool.possession == resv.tool.RETURNED %}
+                        Awaiting Verification
+                    {% endif %}
+                {% endif %}
+            </div>
+            <br>
+        {% endfor %}
+    {% else %}
+        <div>
+            <h1>You haven't made any borrow reservations.<br>Browse through some available tools</h1>
+            <a class="btn btn-primary add-tool-btn btn-lg" href="/">Browse tools</a>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block side_block %}
+        <a href="/profile/" class="list-group-item">Profile</a>
+        <a href="/mytools/" class="list-group-item">My tools</a>
+        <a href="/myborrowlist/" class="list-group-item active">Borrowing</a>
+        <a href="/mylendlist/" class="list-group-item">Lending</a>
+        {% comment %}<a href="javascript:displayAddTool()" class="list-group-item">Add tool</a>{% endcomment %}
+{% endblock %}

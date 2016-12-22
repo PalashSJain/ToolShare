@@ -1,0 +1,22 @@
+{% extends "shed/shed-menu.html" %}
+{% load staticfiles %}
+
+{% block side_block %}
+    <a href="/shed/stats/" class="list-group-item active" id="link_stat">Zone statistics</a>
+    <a href="/viewshedusers/" class="list-group-item" id="link_mbr">Zone members</a>
+    <a href="/shed/shed_details/" class="list-group-item" id="link_shed">Shed details</a>
+    {% if isCoordinator %}
+        <a href="/shed/inventory/" class="list-group-item" id="link_inv">Shed inventory</a>
+    {% endif %}
+{% endblock %}
+
+{% block maincontent %}
+        <h2 class="page-title">{{ page_title }}</h2>
+            {% for stat in stats %}
+            <div class="stats-block{% if stat.2 %} large-stats-block{% endif %}">
+                <div class="stat-item-title">{{stat.0}}</div>
+                <div class="stat-item-value{% if stat.3 %} small-text-value{% endif %}">{{stat.1}}</div>
+            </div>
+            {% endfor %}
+{%endblock%}
+

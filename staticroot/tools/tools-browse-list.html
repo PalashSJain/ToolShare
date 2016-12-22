@@ -1,0 +1,60 @@
+{% extends "navigation/base.html" %}
+{% load staticfiles %}
+{% block content %}
+{% if tools %}
+<h2 class="page-title">{{ page_title }}</h2>
+{%block itemslist%}
+			<div id="items">
+			
+				<div class="tool-items-list">
+					
+
+					{%for item in tools%}
+					<div class="tool-item tool-container" data-toolid={{item.id}}>
+                        <div>
+                            {% if item.picture_path%}
+                                <img class="tool-image" src="/uploads/{{ item.picture_path }}">
+                            {% else %}
+                                <img class="tool-image" src="/static/tool_share/images/dummy_tool.png">
+                            {% endif %}
+                        </div>
+
+						<div class="tool-details">
+							<div class="tool-name">{{item.title}}</div>
+							<div class="tool-description">{{item.description}}</div>
+
+                            {% if item.is_available == True %}
+							<div class="tool-status">Available Today</div>
+                            {% else %}
+                            <div class="tool-status">Check Availablity</div>
+                            {% endif %}
+							<div class="tool-owner">Owner: {{item.ownedBy }}</div>
+						</div>
+					</div>
+					{%endfor%}
+					</div>
+			</div>
+{%endblock%}
+{% else %}
+    <h1>Your neighbors have not shared any tools yet.</h1>
+{% endif %}
+{% endblock %}
+{% block side_block %}{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" id="tool-script">
+	$(document).ready(function(){
+		$('.tool-item.tool-container').on('click', itemClick);
+	});
+
+	function itemClick(event){
+		var toolId = $(event.target).data('toolid');
+		$.ajax({
+		 	url: 'tools/' + toolId + '/',
+		    dataType: 'html',
+		    success: displayModal,
+		    error: function(){console.log("error");}
+		});
+	}
+</script>
+{% endblock %}

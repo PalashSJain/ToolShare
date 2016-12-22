@@ -1,0 +1,310 @@
+*, body{
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+.navbar-link-items{
+	padding-right: 20px;
+}
+
+.page-title{
+	text-align: center;
+}
+
+.tool-items-list{
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+	width: 490px;
+	padding-bottom: 20px;
+}
+
+.tool-item{
+	position: relative;
+	height: 154px;
+	width: 490px;
+	border: 2px solid #dddddd;
+	border-radius: 4px;
+	margin-top: 4px;
+	cursor: pointer;
+	background-color: #ffffff;
+	transition: box-shadow 0.2s ease;
+}
+.tool-item_superuser{
+	position: relative;
+	height: 154px;
+	width: 490px;
+	border: 2px solid #dddddd;
+	border-radius: 4px;
+	margin-top: 4px;
+	background-color: #ffffff;
+	transition: box-shadow 0.2s ease;
+}
+
+.tool-item:hover {
+    box-shadow: 0 5px 10px rgba(0,0,0,.5);
+}
+
+.landing-photo{
+	width: 80%;
+}
+.note-tool-image{
+	position: absolute;
+	width: 60px;
+	height: 60px;
+	/* background: grey; */
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	left: 0px;
+	pointer-events: none;
+}
+.note-user-image{
+	position: absolute;
+	width: 60px;
+	height: 60px;
+	/* background: grey; */
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	left: -60px;
+	pointer-events: none;
+}
+.tool-image{
+	position: absolute;
+	width: 140px;
+	height: 140px;
+	/* background: grey; */
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	left: 8px;
+	pointer-events: none;
+}
+
+.tool-details{
+	position: absolute;
+	right: 8px;
+	width: 320px;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	height: 140px;
+	pointer-events: none;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.tool-details_superuser{
+	position: absolute;
+	right: 8px;
+	width: 420px;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	height: 140px;
+}
+
+.btn-delete {
+	color: white;
+	background-color: darkslategrey;
+	border-color: darkslategrey;
+}
+.btn-delete:hover {
+	background-color: black;
+	border-color: darkslategrey;
+}
+.tool-name{
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	font-size: 20pt;
+	font-weight: bold;
+	pointer-events: none;
+}
+
+.tool-status{
+	font-size: 12pt;
+	pointer-events: none;
+}
+
+.tool-owner{
+	font-size: 12pt;
+	/*color: #337ab7;*/
+	pointer-events: none;
+	font-weight: bold;
+}
+
+.tool-description{
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	font-size: 16pt;
+	pointer-events: none;
+}
+
+.verify-btn{
+	position: absolute;
+	left:158px;
+	bottom:10px;
+}
+
+.side-nav-links {
+    width: 200px;
+    position: fixed;
+    top: 70px;
+    left: 15px;
+}
+
+.align-it-center{
+	position: absolute;
+	text-align: center;
+	margin: auto;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 800px;
+	height: 180px;
+}
+
+.zero-notifications{
+	width: 360px;
+	height: 300px;
+	line-height: 300px;
+	text-align: center;
+}
+
+.zero-notifications h5{
+	line-height: inherit;
+	margin: 0;
+	color: grey;
+}
+
+.notification-items {
+	width: 360px;
+}
+
+.notification-msg{
+	width: 295px;
+	position: absolute;
+	right: 0;
+}
+
+.notification-item{
+	position: relative;
+	width: 360px;
+	min-height: 60px;
+	padding: 5px;
+	cursor: pointer;
+	color: black;
+	background-color: transparent;
+	font-size: 11pt;
+	border-bottom: 1px solid #cacaca;
+}
+
+.notification-item:hover{
+	background-color: #337ab7;
+	color: white;
+}
+
+.noti-count{
+	width: 0;
+	height: 0;
+	position: absolute;
+	top: 0;
+	color: transparent;
+}
+
+.tool-description-details{
+	position: relative;
+}
+
+.modal-body .tool-image{
+	position: relative;
+}
+
+.shed-input{
+	margin-bottom: 10px;
+	width: 200px;
+}
+
+.shed-form{
+	position: relative;
+	width: 200px;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.required:after {
+	content: '*';
+	color: #ff0000;
+}
+
+.stats-block{
+	position: relative;
+	float: left;
+	width: 200px;
+	height: 200px;
+	margin: 10px;
+	border-radius: 4px;
+	text-align: center;
+}
+
+.large-stats-block{
+	width: 310px;
+}
+
+.stat-item-title{
+	position: relative;
+	height: 40px;
+	background-color: #337ab7;
+	border: 2px solid #337ab7;
+	border-bottom: none;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	line-height: 38px;
+	color: #ffffff;
+	font-size: 12pt;
+}
+
+.small-text-title{
+	font-size: 9pt;
+}
+
+.stat-item-value{
+	border: 2px solid #dddddd;
+	border-top: none;
+	height: 156px;
+	font-size: 30pt;
+	line-height: 156px;
+}
+
+.small-text-value{
+	font-size: 12pt;
+}
+
+.statistics-container{
+	position: relative;
+	width: 660px;
+	margin: auto;
+}
+
+.tool-item.shed-user:hover{
+	box-shadow: none;
+	cursor: default;
+}
+
+.list-group-item{
+	width: 100%;
+}
+
+.profile-image{
+	width: 65%; !important;
+}
+
+.tool-full-info{
+	word-wrap: break-word;
+}

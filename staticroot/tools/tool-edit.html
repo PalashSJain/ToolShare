@@ -1,0 +1,134 @@
+<!-- Modal -->
+<div class="modal fade tool-edit-modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">
+				{% if form.instance.pk %}
+				    Edit Tool
+				{% else %}
+				    Add Tool
+				{% endif %}
+                </h4>
+            </div>
+            <div class="modal-body">
+				    <!-- enctype required for a FileField -->
+						<form method="POST" class="post-form tool-form" enctype="multipart/form-data">
+							{% csrf_token %}
+                            <div class="col-sm-12 well">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        {% if intialPP %}
+                                            <a href="/uploads/{{ intialPP }}"><img class="list-group-item"
+                                                                                   src="/uploads/{{ intialPP }}"></a>
+                                            {% if intialPP %}
+                                                <input id="picture_path-clear_id" name="picture_path-clear"
+                                                       type="checkbox"
+                                                        {% if form.picture_path.value %}
+                                                       unchecked
+                                                        {% endif %}>
+                                                <label for="picture_path-clear_id">Remove picture</label>
+                                            {% endif %}
+                                        {% else %}
+                                            <img class="list-group-item"
+                                                 src="/static/tool_share/images/dummy_tool.png">
+                                        {% endif %}
+                                        <input id="id_picture_path" name="picture_path" type="file">
+                                        <span class="help-block has-error">{{ form.picture_path.errors }}</span>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="form-group">
+                                            <label>Tool name</label><br>
+                                            <input type="text" name="title" id="id_title" maxlength=30
+                                                   placeholder="Tool Name" class="form-control" required
+                                                   value="{{ form.title.value }}">
+                                            <span class="help-block has-error">{{ form.title.errors }}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Shared from</label>{{ form.pickupDropLoc }}
+                                            <span class="help-block has-error">{{ form.pickupDropLoc.errors }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Description</label>
+                                    <textarea id="id_description" name="description" placeholder="Description" rows="3"
+                                              class="form-control" required data-toggle="tooltip"
+                                              title="Please describe the tool in a few sentences.">{{ form.description.value }}</textarea>
+                                    <span class="help-block has-error">{{ form.description.errors }}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="required">Special instructions</label>
+                                    <textarea id="id_special_instructions" name="special_instructions" placeholder="Special Instructions" rows="3"
+                                              class="form-control" data-toggle="tooltip"
+                                              title="Do you have special instructions for the usage of the tool?">{{ form.special_instructions.value }}</textarea>
+                                    <span class="help-block has-error">{{ form.special_instructions.errors }}</span>
+                                </div>
+                            </div>
+
+							<button type="submit" class="btn btn-success save-tool-btn">Save Tool</button>
+							<button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close">Cancel</button>
+
+				            {%  if form.instance.pk %}
+				                <button type="reset" class="save btn btn-default">Reset</button>
+				            {% endif %}
+						</form>
+					</div>
+				</div>
+				</div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.save-tool-btn').on('click', saveBtnClick);
+    });
+
+    function saveBtnClick(event) {
+    	event.preventDefault();
+    	var data = new FormData($('.tool-form').get(0)); //send the <form> tag and its contents
+
+        $.ajax({
+        	type: 'POST',
+        	data: data,
+		    cache: false,
+		    processData: false,
+		    contentType: false,
+            url: '{{path}}',
+            dataType: 'html',
+            success: function(data){
+                //data is entireToolEditOrToolOwnerListHTMLfileContents aka a <div #myModal> and <script>
+            	console.log("add-tool ajax transmission success");
+
+                if(data.indexOf('tool-edit-modal') > 0){
+                    //if tool editing failed
+                    console.log('tool editing failed');
+                    //$(htmlstring) strips out any html or body tags
+                    //.find searches descendants of first element and NOT first element
+                    //.filter searches all elements
+                    newContentForModal=$(data).filter('#myModal').html();
+{#                    console.log(newContentForModal)#}
+
+                    $('body').append($(data).filter('script')); //need to run script to attach onclick handler to new modal
+                    $('.tool-edit-modal').html(newContentForModal);
+                    $("#myModal").modal('handleUpdate'); //Readjusts the modal's positioning to counter a scrollbar in case one should appear
+
+                } 
+                else {
+                    //if tool was successfully edited
+                    console.log('tool editing success');
+                    window.location.href="/mytools/";
+                    // $('body').html(data); //can show a 500 or redirect to template
+                    // window.location.reload(); //get new page height and show scrollbar
+                }
+            },
+            error: function (data) {
+            	console.log("add-tool ajax transmission error");
+                console.log(data);
+            }
+        });
+    }
+</script>

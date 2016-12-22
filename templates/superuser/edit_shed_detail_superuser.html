@@ -1,0 +1,44 @@
+{% extends "superuser/superuser_base.html" %}
+{% load staticfiles %}
+{% block side_block %}
+    <style>
+    .list-group{
+        padding-top: 40px;
+    }
+
+    </style>
+<div class="list-group side-nav-links">
+    <a href="/superuser/view_allusers/" class="list-group-item" id="link_stat">All Users</a>
+    <a href="/superuser/viewallsheds/" class="list-group-item active" id="link_mbr">All Sheds</a>
+    <a href="/superuser/viewalltools/" class="list-group-item" id="link_shed">All Tools details</a>
+</div>
+{% endblock %}
+{% block content %}
+<h2 class="page-title">{{ page_title }}</h2>
+<div id="users" class="tool-items-list">
+
+
+    <div >
+           <div class="form-group">
+                            <label class="required">Street Address</label>
+                            <textarea id="id_address" name="address"  rows="3"
+                                      class="form-control" required data-toggle="tooltip">{{ shed_detail.street_address}}</textarea>
+           </div>
+        <label class="required">City</label>
+                            <textarea id="city" name="city"  rows="1"
+                                      class="form-control" required data-toggle="tooltip" readonly>{{ shed_detail.city}}</textarea>
+            <p>Shed Zipcode : {{ shed_detail.zip_code }}</p>
+
+
+    </div>
+        <p><button class="btn btn-success" onclick="updateAdd()" type="button">Save Address</button></p>
+</div>
+    <script>
+    function updateAdd() {
+        var add=document.getElementById('id_address').value;
+        var city=document.getElementById('city').value;
+        document.location.href = "/superuser/save_shed_detail_superuser/"+add+'/'+city+'/';
+    }
+	</script>
+{% endblock %}
+
