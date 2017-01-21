@@ -9,17 +9,14 @@ Steps to run Tool Share server on the local machine
 	> Start the Django server by running the runserver command
 3. Navigate to http://localhost:8000/ from your browser
 
-Sample credentials
-	zone: 12345
+Sample credentials for normal users:
 	pratham@mp.com	
 	palash@mp.com
-	
-	zone: 54321
 	michelle@mp.com
 	jadder@mp.com
 	satyajit@mp.com
 
-	super user:
+For super user account:
 	admin@mp.com
 	
 Sample passwords (for all)
